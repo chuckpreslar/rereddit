@@ -1,8 +1,5 @@
 ![broadcaster logo](http://i.imgur.com/kk7q0Ni.png)
 
-A NodeJS wrapper for reddit.com's API.
-
-
 ## Usage
 Install via NPM.
 
