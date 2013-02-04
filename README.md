@@ -37,7 +37,7 @@ rereddit.get.by_id('t3_a515a', function(err, post) {
 Retrieves comments for a single post.
 
 ```js
-rereddit.get.comments('t3_a515a' /* All that's needed is the id36 of `a515a` */, function(err, post) {
-  // Do something with the single post.
+rereddit.get.comments('t3_a515a' /* All that's needed is the id36 of `a515a` */, function(err, comments) {
+  // Do something with the comments.
 });
 ```
