@@ -1,3 +1,26 @@
+
+/**
+ * Copyright (c) 2013 Chuck Preslar
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+ * SOFTWARE.
+ */
+
 ;(function() {
 
   /**
@@ -67,6 +90,27 @@
   };
 
   /**
+   * Generates initial request object.
+   *
+   * @api private
+   *
+   * @param {String} type The request type.
+   * @param {String} url The request url.
+   * @returns {Request} The initialized request.
+   */
+
+  var _request = function(type, url) {
+    if(arguments.length < 2 || !request[type])
+      throw Error('Something has went horribly wrong.');
+    var req = request[type](url)
+      .set('Accept', 'application/json')
+      .set('User-Agent', 'ReReddit - NodeJS reddit.com API Wrapper.');
+    if(user && user.modhash && user.cookie)
+      req = req.send({ uh: user.modhash }).query({ uh: user.modhash }).set('Cookie', user.cookie);
+    return req;
+  };
+
+  /**
    * Retrieves posts from reddit.com and potential subreddits.
    *
    * @api public
@@ -85,9 +129,12 @@
       (args.limit || args.after ? '?' + 
       (args.limit && args.after ? 'limit=' + args.limit + '&after=' + args.after : 
       args.limit ? 'limit=' + args.limit : 'after=' + args.after) : '');
-    var req = request.get(url)
-      .set('Accept', 'application/json')
-      .set('User-Agent', 'ReReddit NodeJS API.');
+    _request('get', url).end(function(err, res) {
+      console.log(res.body)
+      if(err)
+        return args.callback(err, undefined);
+      return args.callback(undefined, res.body.data.children);
+    });
   };
 
     /**
@@ -100,27 +147,31 @@
      */
 
     get.by_id = function(id, callback) {
-      request.get(base_url + 'by_id/' + id + '.json')
-        .set('Accept', 'application/json')
-        .set('User-Agent', 'ReReddit NodeJS API.')
-        .end(callback);
+      _request('get', base_url + 'by_id/' + id + '.json')
+        .end(function(err, res) {
+        if(err)
+          return callback(err, undefined);
+        return callback(undefined, res.body)
+      });
     };
 
-     /**
-      * Retrieves comments for a signle post.
-      *
-      * @api public
-      *
-      * @param {String} id The id of the post to retrieve comments for.
-      * @param {Function} callback Callback to fire once the request is resolved.
-      */
+    /**
+     * Retrieves comments for a signle post.
+     *
+     * @api public
+     *
+     * @param {String} id The id of the post to retrieve comments for.
+     * @param {Function} callback Callback to fire once the request is resolved.
+     */
 
     get.comments = function(id, callback) {
       id = id.match(regex) ? id.substr(3) : id;
-      request.get(base_url + 'comments/' + id + '.json')
-        .set('Accept', 'application/json')
-        .set('User-Agent', 'ReReddit NodeJS API.')
-        .end(callback);
+      _request('get', base_url + 'comments/' + id + '.json')
+        .end(function(err, res) {
+          if(err)
+            return callback(err, undefined);
+          return callback(undefined, res.body)
+        });
     };
 
   /**
@@ -136,15 +187,18 @@
   var login = rereddit.login = function(username, password, callback) {
     if(arguments.length < 3)
       throw new Error('rereddit#login expects a username, password, and callback as arguments - none are optional.');
-    request.post(base_url + 'api/login/' + username)
-      .set('Accept', 'application/json')
-      .set('User-Agent', 'ReReddit NodeJS API.')
+    _request('post', base_url + 'api/login/' + username)
       .query({ user: username })
       .query({ passwd: password })
       .query({ api_type: 'json'})
       .send({ passwd: password, user: username, api_type: 'json' })
       .end(function(err, res) {
-        console.log(res);
+        if(err)
+          return callback(err, undefined);
+        if(res.body.json.errors.length > 0)
+          return callback(res.body.json.errors, undefined);
+        user = rereddit.user = { username: username, modhash: res.body.json.data.modhash, cookie: res.body.json.data.cookie }
+        return callback(undefined, user);
       });
   };
 
@@ -163,15 +217,30 @@
    * Fetches public details provided about the user.
    * 
    * @api public
+   *
+   * @param {String} username The users's username to lookup.
+   * @param {Function} callback The callback to fire once the request is resolved.
    */
 
   var about = rereddit.about = function(username, callback) {
     if(arguments.length < 2)
       throw new Error('rereddit#about expects a username, and callback as arguments - none are optional.');
-    request.get(base_url + 'user/' + username + '/about.json')
-      .set('Accept', 'application/json')
-      .set('User-Agent', 'ReReddit NodeJS API.')
-      .end(callback);
+    _request('get', base_url + 'user/' + username + '/about.json')
+      .end(function(err, res) {
+        if(err)
+          return callback(err, undefined);
+        return callback(undefined, res.body)
+      });
   };
+
+  /**
+   * Fetches details about the current authorized user.
+   *
+   * @api public
+   *
+   * NOTE: Not impletemented.
+   */
+
+  var me = rereddit.me = function() {};
 
 }())
