@@ -125,12 +125,13 @@
     var args = _arguments(arguments);
     if(!args.callback)
       throw new Error('rereddit#get expects at minimum a callback argument.');
-    var url = base_url + (args.subreddit ? 'r/' + args.subreddit : '') + '.json' +
-      (args.limit || args.after ? '?' + 
-      (args.limit && args.after ? 'limit=' + args.limit + '&after=' + args.after : 
-      args.limit ? 'limit=' + args.limit : 'after=' + args.after) : '');
-    _request('get', url).end(function(err, res) {
-      console.log(res.body)
+    var url = base_url + (args.subreddit ? 'r/' + args.subreddit : '') + '.json';
+    var req = _request('get', url)
+    if(args.limit)
+      req = req.query({ limit: args.limit })
+    if(args.after)
+      req = req.query({ after: args.after })
+    req.end(function(err, res) {
       if(err)
         return args.callback(err, undefined);
       return args.callback(undefined, res.body.data.children);
