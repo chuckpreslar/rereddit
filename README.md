@@ -27,7 +27,7 @@ rereddit.get('funny', 5, 't3_a515a', function(err, posts) {
 Retrieves a single post based on its' thing `type` and `id36` name from reddit.com
 
 ```js
-rereddit.get('t3_a515a', function(err, post) {
+rereddit.get.by_id('t3_a515a', function(err, post) {
   // Do something with the single post.
 });
 ```
@@ -37,7 +37,7 @@ rereddit.get('t3_a515a', function(err, post) {
 Retrieves comments for a single post.
 
 ```js
-rereddit.get('t3_a515a' /* All that's needed is the id36 of `a515a` */, function(err, post) {
+rereddit.get.comments('t3_a515a' /* All that's needed is the id36 of `a515a` */, function(err, post) {
   // Do something with the single post.
 });
 ```
