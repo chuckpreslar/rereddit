@@ -147,4 +147,15 @@
     return superagent.get(base_url + 'api/me.json');
   };
 
+  /**
+   * Initializes a request to retrieve a list of subreddits.
+   *
+   * @api public
+   * @returns {Request} The initialized request.
+   */
+
+  rereddit.reddits = function() {
+    return superagent.get(base_url + 'reddits.json');
+  };
+
 }())
