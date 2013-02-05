@@ -2,7 +2,7 @@
 
 ## About
 
-Rereddit is a NodeJS wrapper for interfacing with reddit.com's API.  It is built around [superagent](https://github.com/visionmedia/superagent) with a few extentions to its Request object for convenience.  This extension of superagent allows for requests to be made like so:
+Rereddit is a NodeJS wrapper for interfacing with reddit.com's API.  It is built around [superagent](https://github.com/visionmedia/superagent) with a few extentions to its Request object for convenience.  This extension allows for requests to be made like so:
 
 ```js
 rereddit.read('funny').limit(25).after('t3_a515a')
