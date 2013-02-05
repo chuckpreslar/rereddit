@@ -53,6 +53,10 @@ Login generates the initial post request and attaches the users credentials.  Ca
 #### me()
 A call to `me` generates an initialized request to grab the user's details. A call to `me` must be followed by a call to `as` (documented below) to pass along the required credentials with the request.
 
+#### reddits()
+Initializes a request to retrieve a list of subreddits from reddit.com.
+
+
 ### Rereddit exposes [superagent's](https://github.com/visionmedia/superagent) Request object with a few addition convenience methods attached to each instance.
 
 ##### as(user)
