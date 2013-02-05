@@ -178,6 +178,8 @@
    */
 
   var me = rereddit.me = function(callback) {
+    if(arguments.length < 1)
+      throw new Error('rereddit#me expects a callback as an argument.');
     _request('get', base_url + 'api/me.json')
       .end(function(err, res) {
         if(err)

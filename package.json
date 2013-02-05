@@ -1,6 +1,6 @@
 {
   "name": "rereddit",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A NodeJS wrapper for interfacing with the reddit.com API.",
   "main": "index.js",
   "scripts": {
