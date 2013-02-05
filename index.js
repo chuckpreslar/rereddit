@@ -43,7 +43,6 @@
     , t4: 'message'
     , t5: 'subreddit'
   };
-
   var user = rereddit.user = undefined;
 
   /**
@@ -105,75 +104,11 @@
     var req = request[type](url)
       .set('Accept', 'application/json')
       .set('User-Agent', 'ReReddit - NodeJS reddit.com API Wrapper.');
-    if(user && user.modhash && user.cookie)
-      req = req.send({ uh: user.modhash }).query({ uh: user.modhash }).set('Cookie', user.cookie);
+    if(user)
+      req = req.query({ uh: user.modhash })
+            .set('cookie', user['set-cookie']);
     return req;
   };
-
-  /**
-   * Retrieves posts from reddit.com and potential subreddits.
-   *
-   * @api public
-   *
-   * @param {String} [subreddit] The subreddit to retrieve posts from.
-   * @param {Number} [limit] The number of posts to limit the result to.
-   * @param {String} [after] The post all results should follow after.
-   * @param {Function} callback Callback to fire once the request is resolved.
-   */
-
-  var get = rereddit.get = function(subreddit, limit, after, callback) {
-    var args = _arguments(arguments);
-    if(!args.callback)
-      throw new Error('rereddit#get expects at minimum a callback argument.');
-    var url = base_url + (args.subreddit ? 'r/' + args.subreddit : '') + '.json';
-    var req = _request('get', url)
-    if(args.limit)
-      req = req.query({ limit: args.limit })
-    if(args.after)
-      req = req.query({ after: args.after })
-    req.end(function(err, res) {
-      if(err)
-        return args.callback(err, undefined);
-      return args.callback(undefined, res.body.data.children);
-    });
-  };
-
-    /**
-     * Retrieves a single post by its id.
-     *
-     * @api public
-     *
-     * @param {String} id The id of the post to retrieve.
-     * @param {Function} callback Callback to fire once the request is resolved.
-     */
-
-    get.by_id = function(id, callback) {
-      _request('get', base_url + 'by_id/' + id + '.json')
-        .end(function(err, res) {
-        if(err)
-          return callback(err, undefined);
-        return callback(undefined, res.body)
-      });
-    };
-
-    /**
-     * Retrieves comments for a signle post.
-     *
-     * @api public
-     *
-     * @param {String} id The id of the post to retrieve comments for.
-     * @param {Function} callback Callback to fire once the request is resolved.
-     */
-
-    get.comments = function(id, callback) {
-      id = id.match(regex) ? id.substr(3) : id;
-      _request('get', base_url + 'comments/' + id + '.json')
-        .end(function(err, res) {
-          if(err)
-            return callback(err, undefined);
-          return callback(undefined, res.body)
-        });
-    };
 
   /**
    * Logs a user into reddit.com using the provided username and password.
@@ -198,7 +133,7 @@
           return callback(err, undefined);
         if(res.body.json.errors.length > 0)
           return callback(res.body.json.errors, undefined);
-        user = rereddit.user = { username: username, modhash: res.body.json.data.modhash, cookie: res.body.json.data.cookie }
+        user = rereddit.user = { 'username': username, 'modhash': res.body.json.data.modhash, 'cookie': res.body.json.data.cookie, 'set-cookie': res.header['set-cookie'] }
         return callback(undefined, user);
       });
   };
@@ -242,6 +177,78 @@
    * NOTE: Not impletemented.
    */
 
-  var me = rereddit.me = function() {};
+  var me = rereddit.me = function(callback) {
+    _request('get', base_url + 'api/me.json')
+      .end(function(err, res) {
+        if(err)
+          return callback(err, undefined);
+        return callback(undefined, res.body);
+      });
+  };
+
+  /**
+   * Retrieves posts from reddit.com and potential subreddits.
+   *
+   * @api public
+   *
+   * @param {String} [subreddit] The subreddit to retrieve posts from.
+   * @param {Number} [limit] The number of posts to limit the result to.
+   * @param {String} [after] The post all results should follow after.
+   * @param {Function} callback Callback to fire once the request is resolved.
+   */
+
+  var get = rereddit.get = function(subreddit, limit, after, callback) {
+    var args = _arguments(arguments);
+    if(!args.callback)
+      throw new Error('rereddit#get expects at minimum a callback argument.');
+    var url = base_url + (args.subreddit ? 'r/' + args.subreddit : '') + '.json';
+    var req = _request('get', url)
+    if(args.limit)
+      req = req.query({ limit: args.limit })
+    if(args.after)
+      req = req.query({ after: args.after })
+    req.end(function(err, res) {
+      if(err)
+        return args.callback(err, undefined);
+      return args.callback(undefined, res.body);
+    });
+  };
+
+    /**
+     * Retrieves a single post by its id.
+     *
+     * @api public
+     *
+     * @param {String} id The id of the post to retrieve.
+     * @param {Function} callback Callback to fire once the request is resolved.
+     */
+
+    get.by_id = function(id, callback) {
+      _request('get', base_url + 'by_id/' + id + '.json')
+        .end(function(err, res) {
+        if(err)
+          return callback(err, undefined);
+        return callback(undefined, res.body)
+      });
+    };
+
+    /**
+     * Retrieves comments for a signle post.
+     *
+     * @api public
+     *
+     * @param {String} id The id of the post to retrieve comments for.
+     * @param {Function} callback Callback to fire once the request is resolved.
+     */
+
+    get.comments = function(id, callback) {
+      id = id.match(regex) ? id.substr(3) : id;
+      _request('get', base_url + 'comments/' + id + '.json')
+        .end(function(err, res) {
+          if(err)
+            return callback(err, undefined);
+          return callback(undefined, res.body)
+        });
+    };
 
 }())
