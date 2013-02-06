@@ -35,9 +35,9 @@ var rereddit = require('rereddit');
 ```
 ## API
 
-##### read([item])
+#### read([item])
 The `read` function takes an optional string as an argument, matching either a reddit thing id36, or subreddit name.  If no argument is present, rereddit assumes you wish to grab the front page posts of reddit.com.
-##### login(username, password)
+#### login(username, password)
 Login generates the initial post request and attaches the users credentials.  Calling `end` on a `login` request will return a `user` object containing the cookie to be set, as well as a data object holding the generated modhash and cookie details like so:
 
 ```js
@@ -57,9 +57,9 @@ A call to `me` generates an initialized request to grab the user's details. A ca
 Initializes a request to retrieve a list of subreddits from reddit.com.
 
 
-### Rereddit exposes [superagent's](https://github.com/visionmedia/superagent) Request object with a few addition convenience methods attached to each instance.
+### Rereddit exposes [superagent's](https://github.com/visionmedia/superagent) Request object with a few additional convenience methods attached to each instance.
 
-##### as(user)
+#### as(user)
 The additional `as` method attached to the `Request` prototype simpply fits the object with credentials to pass along to the reddit.com API.
 #### limit(num)
 Limit, as may be expected, is used for limiting the amount of results returned via a request geneerated by a call to `read`.
