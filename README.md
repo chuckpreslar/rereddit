@@ -64,6 +64,6 @@ The additional `as` method attached to the `Request` prototype simply fits the o
 #### limit(num)
 Limit, as may be expected, is used for limiting the amount of results returned via a request geneerated by a call to `read`.
 #### after(id)
-As with `limit`,`after` simply tells the request that all results returned from a `read` request should follow after the specified id.  *The id must be in proper id36 format.*
+As with `limit`, `after` simply tells the request that all results returned from a `read` request should follow after the specified id.  *The id must be in proper id36 format.*
 
 ### Release v0.0.5
