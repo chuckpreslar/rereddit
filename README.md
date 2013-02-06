@@ -60,7 +60,7 @@ Initializes a request to retrieve a list of subreddits from reddit.com.
 ### Rereddit exposes [superagent's](https://github.com/visionmedia/superagent) Request object with a few additional convenience methods attached to each instance.
 
 #### as(user)
-The additional `as` method attached to the `Request` prototype simpply fits the object with credentials to pass along to the reddit.com API.
+The additional `as` method attached to the `Request` prototype simply fits the object with credentials to pass along to the reddit.com API.
 #### limit(num)
 Limit, as may be expected, is used for limiting the amount of results returned via a request geneerated by a call to `read`.
 #### after(id)
