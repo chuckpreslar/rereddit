@@ -62,8 +62,8 @@
       if(typeof user === 'undefined' || !user.cookie || !user.data)
         return this;
       this.set('cookie', user.cookie);
-      this.send({ uh: user.data.uh });
-      this.query({ uh: user.data.uh });
+      this.send({ uh: user.data.modhash });
+      this.query({ uh: user.data.modhash });
       return this;
     }
 
