@@ -158,4 +158,15 @@
     return superagent.get(base_url + 'reddits.json');
   };
 
+  /**
+   * Initializes a request to retrieve a user's unread messages.
+   *
+   * @api public
+   * @returns {Request} The initialized request.
+   */
+
+  rereddit.unread = function() {
+    return superagent.get(base_url + 'message/unread.json');
+  };
+
 }())
