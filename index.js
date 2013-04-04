@@ -89,17 +89,19 @@
    */
 
   Request.prototype._end = Request.prototype.end;
-  Request.prototype.end = function(callback) {
+  Request.prototype.end = function(fn) {
     var self = this;
     this.set('accept', 'application/json');
     this.set('user-agent', 'rereddit - A NodeJS wrapper for reddit.com.');
     this.query({ 'api_type': 'json' });
     this._end(function(err, res) {
+      if(err)
+        return fn && fn.call(this, err, res);
       if(!self.authorizing)
-        return callback(err, res.body);
+        return fn && fn.call(self, err, res.body);
       if(!res.body.json.data || !res.header['set-cookie'] || res.body.json.errors.length > 0)
-        return callback(new Error('Something went seriously wrong.'), res);
-      return callback(err, { data: res.body.json.data, cookie: res.header['set-cookie'] });
+        return fn && fn.call(self, new Error('Something went seriously wrong.'), res);
+      return fn && fn.call(self, err, { data: res.body.json.data, cookie: res.header['set-cookie'] });
     });
   };
 
