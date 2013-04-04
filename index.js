@@ -169,4 +169,19 @@
     return superagent.get(base_url + 'message/unread.json');
   };
 
+  /**
+   * Initializes a request to comment on a thread, message, or another comment.
+   *
+   * @api public
+   * @param {String} [parent] The 'fullname' of the thing to comment on.
+   * @param {String} [text] The text body of the comment.
+   * @returns {Request} The initialized request.
+   */
+
+  rereddit.comment = function(parent, text) {
+    return superagent.post(base_url + 'api/comment')
+      .query({ 'parent': parent })
+      .query({ 'text': text });
+  };
+
 }())
