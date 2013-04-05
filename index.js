@@ -130,8 +130,8 @@
    * Initializes a request to log a user into reddit.com.
    *
    * @api public
-   * @param {String} username The user's username.
-   * @param {String} password The user's password.
+   * @param {String} [username] The user's username.
+   * @param {String} [password] The user's password.
    * @returns {Request} The initialized request.
    */
 
@@ -197,8 +197,8 @@
    * Initializes a request to cast vote on a thread, or another comment.
    *
    * @api public
-   * @param {String} id The `fullname` of the thing to vote on.
-   * @param {String|Number} dir The direction, up or down, to cast the vote as.
+   * @param {String} [id] The `fullname` of the thing to vote on.
+   * @param {String|Number} [dir] The direction, up or down, to cast the vote as.
    * @returns {Request} The initialized request.
    */
 
@@ -207,13 +207,13 @@
       .query({ dir: dir === 'up' || parseInt(dir) === 1 ? 1 : dir === 'down' || parseInt(dir) === -1 ? -1 : 0 })
       .query({ id: id });
   };
-  
+
   /**
-   * Conveience method thatinitializes a request to cast an upvote
+   * Conveience method that initializes a request to cast an upvote
    * on a thread, or another comment.
    *
    * @api public
-   * @param {String} id The `fullname` of the thing to vote on.
+   * @param {String} [id] The `fullname` of the thing to vote on.
    * @returns {Request} The initialized request.
    */
 
@@ -222,11 +222,11 @@
   };
 
   /**
-   * Conveience method thatinitializes a request to cast an downvote
+   * Conveience method that initializes a request to cast an downvote
    * on a thread, or another comment.
    *
    * @api public
-   * @param {String} id The `fullname` of the thing to vote on.
+   * @param {String} [id] The `fullname` of the thing to vote on.
    * @returns {Request} The initialized request.
    */
 
