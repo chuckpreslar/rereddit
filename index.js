@@ -240,15 +240,9 @@
     superagent.post(base_url + 'api/new_captcha')
       .as(req.user)
       .end(function(err, res) {
-        var iden = res.json.data.iden;
-        superagent[req.method.toLowerCase()]('http://www.reddit.com' + req.req.path)
-          .as(req.user)
-          ._end(function(err, res) {
-            var captcha = res.body.json.captcha;
-            req.query({ iden : iden })
-              .query({ captcha: captcha })
-              .emit('captcha:ready');
-          });
+        req.query({ iden: res.json.data.iden })
+          .query({ captcha: '12345'})
+          .emit('captcha:ready');
       });
   };
 
