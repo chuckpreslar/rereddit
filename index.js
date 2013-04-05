@@ -103,11 +103,11 @@
         // Some requests may not have a modhash, we don't care.
       }
       if(err)
-        return fn && fn.call(this, err, res, self.user);
+        return fn && fn.call(self, err, res, self.user);
       if(!self.authorizing)
         return fn && fn.call(self, err, res.body, self.user);
       if(!res.body.json.data || !res.header['set-cookie'] || res.body.json.errors.length > 0)
-        return fn && fn.call(self, new Error('Something went seriously wrong.'), res);
+        return fn && fn.call(self, new Error('Something went seriously wrong.'), res, self.user);
       return fn && fn.call(self, err, (self.user = { data: res.body.json.data, cookie: res.header['set-cookie'] }), self.user);
     });
   };
