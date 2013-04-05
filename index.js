@@ -64,6 +64,7 @@
       this.set('cookie', user.cookie);
       this.send({ uh: user.data.modhash });
       this.query({ uh: user.data.modhash });
+      this.user = user;
       return this;
     }
 
@@ -95,13 +96,19 @@
     this.set('user-agent', 'rereddit - A NodeJS wrapper for reddit.com.');
     this.query({ 'api_type': 'json' });
     this._end(function(err, res) {
+      try {
+        if(typeof self.user !== 'undefined')
+          self.user.data.modhash = res.body.data.modhash;
+      } catch(e) {
+        // Some requests may not have a modhash, we don't care.
+      }
       if(err)
-        return fn && fn.call(this, err, res);
+        return fn && fn.call(this, err, res, self.user);
       if(!self.authorizing)
-        return fn && fn.call(self, err, res.body);
+        return fn && fn.call(self, err, res.body, self.user);
       if(!res.body.json.data || !res.header['set-cookie'] || res.body.json.errors.length > 0)
         return fn && fn.call(self, new Error('Something went seriously wrong.'), res);
-      return fn && fn.call(self, err, { data: res.body.json.data, cookie: res.header['set-cookie'] });
+      return fn && fn.call(self, err, (self.user = { data: res.body.json.data, cookie: res.header['set-cookie'] }), self.user);
     });
   };
 
@@ -175,7 +182,7 @@
    * Initializes a request to comment on a thread, message, or another comment.
    *
    * @api public
-   * @param {String} [parent] The 'fullname' of the thing to comment on.
+   * @param {String} [parent] The `fullname` of the thing to comment on.
    * @param {String} [text] The text body of the comment.
    * @returns {Request} The initialized request.
    */
@@ -184,6 +191,47 @@
     return superagent.post(base_url + 'api/comment')
       .query({ 'parent': parent })
       .query({ 'text': text });
+  };
+
+  /**
+   * Initializes a request to cast vote on a thread, or another comment.
+   *
+   * @api public
+   * @param {String} id The `fullname` of the thing to vote on.
+   * @param {String|Number} dir The direction, up or down, to cast the vote as.
+   * @returns {Request} The initialized request.
+   */
+
+  rereddit.vote = function(id, dir) {
+    return superagent.post(base_url + 'api/vote')
+      .query({ dir: dir === 'up' || parseInt(dir) === 1 ? 1 : dir === 'down' || parseInt(dir) === -1 ? -1 : 0 })
+      .query({ id: id });
+  };
+  
+  /**
+   * Conveience method thatinitializes a request to cast an upvote
+   * on a thread, or another comment.
+   *
+   * @api public
+   * @param {String} id The `fullname` of the thing to vote on.
+   * @returns {Request} The initialized request.
+   */
+
+  rereddit.upvote = function(id) {
+    return rereddit.vote(id, 'up');
+  };
+
+  /**
+   * Conveience method thatinitializes a request to cast an downvote
+   * on a thread, or another comment.
+   *
+   * @api public
+   * @param {String} id The `fullname` of the thing to vote on.
+   * @returns {Request} The initialized request.
+   */
+
+  rereddit.downvote = function(id) {
+    return rereddit.vote(id, 'down');
   };
 
 }())
