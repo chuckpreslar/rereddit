@@ -1,6 +1,6 @@
 {
   "name": "rereddit",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "A NodeJS wrapper for interfacing with the reddit.com API.",
   "main": "index.js",
   "scripts": {
@@ -23,6 +23,17 @@
     "mocha": "*",
     "should": "*"
   },
-  "author": "Chuck Preslar",
+  "author": {
+    "name": "Chuck Preslar",
+    "email": "chuckpreslar@gmail.com",
+    "url": "http://www.chuckpreslar.com/"
+  },
+  "contributors": [
+    {
+      "name": "Zach Fogg",
+      "email": "zach.fogg@gmail.com",
+      "url": "http://zachfogg.com"
+    }
+  ],
   "license": "MIT"
 }

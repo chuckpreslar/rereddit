@@ -56,6 +56,11 @@ A call to `me` generates an initialized request to grab the user's details. A ca
 #### reddits()
 Initializes a request to retrieve a list of subreddits from reddit.com.
 
+#### comment(parent, text)
+Initializes a request to post a comment to the specified `parent` thread with the given `text`. *The `parent` id is expected to be in proper id36 format.*
+
+#### vote(id, dir)
+Initializes a request to cast a vote on the specified `id` in the given direction `dir`, which is a string (equal to up or down), or integer (1 or -1). *The  `id` is expected to be in proper id36 format.*
 
 ### Rereddit exposes [superagent's](https://github.com/visionmedia/superagent) Request object with a few additional convenience methods attached to each instance.
 
@@ -66,4 +71,4 @@ Limit, as may be expected, is used for limiting the amount of results returned v
 #### after(id)
 As with `limit`, `after` simply tells the request that all results returned from a `read` request should follow after the specified id.  *The id must be in proper id36 format.*
 
-### Release v0.0.5
+### Release v0.1.0
