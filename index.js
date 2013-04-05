@@ -61,6 +61,7 @@
     Request.prototype.as = function(user) {
       if(typeof user === 'undefined' || !user.cookie || !user.data)
         return this;
+      this.user = user;
       this.set('cookie', user.cookie);
       this.send({ uh: user.data.modhash });
       this.query({ uh: user.data.modhash });
@@ -83,6 +84,11 @@
       return this;
     }
 
+  if(!Request.prototype.hasOwnProperty('captcha'))
+    Request.prototype.captcha = function(captcha) {
+      this.query({ captcha: captcha });
+    };
+
   /**
    * Overwrite end so we can only send the body of the
    * request to the callback and set default.
@@ -91,10 +97,8 @@
   Request.prototype._end = Request.prototype.end;
   Request.prototype.end = function(fn) {
     var self = this;
-    this.set('accept', 'application/json');
-    this.set('user-agent', 'rereddit - A NodeJS wrapper for reddit.com.');
-    this.query({ 'api_type': 'json' });
-    this._end(function(err, res) {
+
+    var handleResponse = function(err, res) {
       if(err)
         return fn && fn.call(this, err, res);
       if(!self.authorizing)
@@ -102,7 +106,20 @@
       if(!res.body.json.data || !res.header['set-cookie'] || res.body.json.errors.length > 0)
         return fn && fn.call(self, new Error('Something went seriously wrong.'), res);
       return fn && fn.call(self, err, { data: res.body.json.data, cookie: res.header['set-cookie'] });
-    });
+    }
+
+    this.set('accept', 'application/json');
+    this.set('user-agent', 'rereddit - A NodeJS wrapper for reddit.com.');
+    this.query({ 'api_type': 'json' });
+
+    if(!this.awaiting_captcha) {
+      this._end(handleResponse);
+    } else {
+      generateCaptcha(this);
+      this.on('captcha:ready', function() {
+        self._end(handleResponse);
+      });
+    }
   };
 
   /**
@@ -182,8 +199,57 @@
 
   rereddit.comment = function(parent, text) {
     return superagent.post(base_url + 'api/comment')
-      .query({ 'parent': parent })
-      .query({ 'text': text });
+      .query({ parent: parent })
+      .query({ text: text });
+  };
+
+  /**
+   * Initializes a request to submit a post to the given subreddit.
+   *
+   * @api public
+   * @param {String} title The title of the post
+   * @param {String} text The text for the post body
+   * @param {String} subreddit The subreddit to sumbit the post to
+   * @param {String} [url] Optional URL to submit with the post
+   */
+
+  rereddit.post = function(title, text, subreddit, url) {
+    var req = superagent.post(base_url + 'api/submit')
+      .query({ title: title })
+      .query({ text: text })
+      .query({ sr: subreddit })
+      .query({ r: subreddit });
+    if(typeof url !== 'undefined' && url.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/gi)) {
+      req.query({ kind: 'link' })
+        .query({ url: url });
+    } else {
+      req.query({ kind: 'self' });
+    }
+    req.awaiting_captcha = true;
+    return req;
+  };
+
+  /**
+   * Generates a new `iden` for handling submissions.
+   *
+   * @api private
+   */
+
+  var generateCaptcha = function(req) {
+    if(!req.user) return;
+    superagent.post(base_url + 'api/new_captcha')
+      .as(req.user)
+      .end(function(err, res) {
+        var iden = res.json.data.iden;
+        superagent[req.method.toLowerCase()]('http://www.reddit.com' + req.req.path)
+          .as(req.user)
+          ._end(function(err, res) {
+            var captcha = res.body.json.captcha;
+            req.query({ iden : iden })
+              .query({ captcha: captcha })
+              .emit('captcha:ready');
+          });
+      });
   };
 
 }())
