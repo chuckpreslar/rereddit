@@ -209,7 +209,7 @@
   };
 
   /**
-   * Conveience method that initializes a request to cast an upvote
+   * Convenience method that initializes a request to cast an upvote
    * on a thread, or another comment.
    *
    * @api public
@@ -222,7 +222,7 @@
   };
 
   /**
-   * Conveience method that initializes a request to cast an downvote
+   * Convenience method that initializes a request to cast an downvote
    * on a thread, or another comment.
    *
    * @api public
