@@ -239,9 +239,9 @@
    */
 
   rereddit.moreChildren = function(id, children) {
+    if (children instanceof Array)
+      children = children.join(',');
     return superagent.post(base_url + 'api/morechildren')
-      if (children instanceof Array)
-        children = children.join(',');
       .query({ 'link_id': id })
       .query({ 'children': children });
   };
