@@ -210,8 +210,8 @@
    * Initializes a request to retrieve hidden comments.
    *
    * @api public
-   * @param {String} [id] The `fullname` of the `morecomments` stub.
-   * @param {[String]} [children] A list of comment ID36s.
+   * @param {String} id The `fullname` of the `morecomments` stub.
+   * @param {[String]} children A list of comment ID36s.
    * @returns {Request} The initialized request.
    */
 
