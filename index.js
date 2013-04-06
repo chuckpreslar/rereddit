@@ -207,6 +207,24 @@
   };
 
   /**
+   * Initializes a request to retrieve hidden comments.
+   *
+   * @api public
+   * @param {String} id The `fullname` of the `morechildren` stub.
+   * @param {String|[String]} children An array or comma-delimited string
+   *   of comment ID36s.
+   * @returns {Request} The initialized request.
+   */
+
+  rereddit.morechildren = function(id, children) {
+    return superagent.post(base_url + 'api/morechildren')
+      if (children instanceof Array)
+        children = children.join(',');
+      .query({ 'link_id': id })
+      .query({ 'children': children });
+  };
+
+  /**
    * Initializes a request to cast vote on a thread, or another comment.
    *
    * @api public
