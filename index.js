@@ -179,6 +179,19 @@
   };
 
   /**
+   * Initializes a request to retrieve the comments of a thread.
+   *
+   * @api public
+   * @param {String} thread The `id` or `fullname` of the thread.
+   * @returns {Request} The initialized request.
+   */
+
+  rereddit.comments = function(thread) {
+    thread = thread.match(thing.regex) ? thread.split('_')[1] : thread;
+    return superagent.get(base_url + 'comments/' + thread + '.json');
+  };
+
+  /**
    * Initializes a request to comment on a thread, message, or another comment.
    *
    * @api public
