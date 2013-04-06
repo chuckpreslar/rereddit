@@ -238,7 +238,7 @@
    * @returns {Request} The initialized request.
    */
 
-  rereddit.morechildren = function(id, children) {
+  rereddit.moreChildren = function(id, children) {
     return superagent.post(base_url + 'api/morechildren')
       if (children instanceof Array)
         children = children.join(',');
