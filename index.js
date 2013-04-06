@@ -211,14 +211,17 @@
    *
    * @api public
    * @param {String} id The `fullname` of the `morechildren` stub.
-   * @param {[String]} children A list of comment ID36s.
+   * @param {String|[String]} children An array or comma-delimited string
+   *   of comment ID36s.
    * @returns {Request} The initialized request.
    */
 
   rereddit.morechildren = function(id, children) {
     return superagent.post(base_url + 'api/morechildren')
+      if (children instanceof Array)
+        children = children.join(',');
       .query({ 'link_id': id })
-      .query({ 'children': children.join(',') });
+      .query({ 'children': children });
   };
 
   /**
