@@ -56,6 +56,9 @@ A call to `me` generates an initialized request to grab the user's details. A ca
 #### reddits()
 Initializes a request to retrieve a list of subreddits from reddit.com.
 
+#### comments(thread)
+Initializes a request to fetch the comments for a `thread` (thread may be the fullname of a reddit thing, or just a things id only).  
+
 #### comment(parent, text)
 Initializes a request to post a comment to the specified `parent` thread with the given `text`. *The `parent` id is expected to be in proper id36 format.*
 
