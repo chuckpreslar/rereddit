@@ -168,6 +168,17 @@
   };
 
   /**
+   * Initializes a request to retrieve a user's message inbox.
+   *
+   * @api public
+   * @returns {Request} The initialized request.
+   */
+
+  rereddit.inbox = function() {
+    return superagent.get(base_url + 'message/inbox.json');
+  };
+
+  /**
    * Initializes a request to retrieve a user's unread messages.
    *
    * @api public
@@ -176,6 +187,17 @@
 
   rereddit.unread = function() {
     return superagent.get(base_url + 'message/unread.json');
+  };
+
+  /**
+   * Initializes a request to retrieve a user's sent messages.
+   *
+   * @api public
+   * @returns {Request} The initialized request.
+   */
+
+  rereddit.sent = function() {
+    return superagent.get(base_url + 'message/sent.json');
   };
 
   /**
@@ -200,7 +222,7 @@
    * @returns {Request} The initialized request.
    */
 
-  rereddit.comment = function(parent, text) {
+  rereddit.comment = rereddit.reply = function(parent, text) {
     return superagent.post(base_url + 'api/comment')
       .query({ 'parent': parent })
       .query({ 'text': text });
