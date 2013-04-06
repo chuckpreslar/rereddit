@@ -233,7 +233,7 @@
    *
    * @api public
    * @param {String} id The `fullname` of the `morechildren` stub.
-   * @param {String|[String]} children An array or comma-delimited string
+   * @param {String|Array} children An array of strings or comma-delimited string
    *   of comment ID36s.
    * @returns {Request} The initialized request.
    */
