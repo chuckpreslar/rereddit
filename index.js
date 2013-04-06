@@ -130,8 +130,8 @@
    * Initializes a request to log a user into reddit.com.
    *
    * @api public
-   * @param {String} [username] The user's username.
-   * @param {String} [password] The user's password.
+   * @param {String} username The user's username.
+   * @param {String} password The user's password.
    * @returns {Request} The initialized request.
    */
 
@@ -182,8 +182,8 @@
    * Initializes a request to comment on a thread, message, or another comment.
    *
    * @api public
-   * @param {String} [parent] The `fullname` of the thing to comment on.
-   * @param {String} [text] The text body of the comment.
+   * @param {String} parent The `fullname` of the thing to comment on.
+   * @param {String} text The text body of the comment.
    * @returns {Request} The initialized request.
    */
 
@@ -197,8 +197,8 @@
    * Initializes a request to cast vote on a thread, or another comment.
    *
    * @api public
-   * @param {String} [id] The `fullname` of the thing to vote on.
-   * @param {String|Number} [dir] The direction, up or down, to cast the vote as.
+   * @param {String} id The `fullname` of the thing to vote on.
+   * @param {String|Number} dir The direction, up or down, to cast the vote as.
    * @returns {Request} The initialized request.
    */
 
@@ -213,7 +213,7 @@
    * on a thread, or another comment.
    *
    * @api public
-   * @param {String} [id] The `fullname` of the thing to vote on.
+   * @param {String} id The `fullname` of the thing to vote on.
    * @returns {Request} The initialized request.
    */
 
@@ -226,7 +226,7 @@
    * on a thread, or another comment.
    *
    * @api public
-   * @param {String} [id] The `fullname` of the thing to vote on.
+   * @param {String} id The `fullname` of the thing to vote on.
    * @returns {Request} The initialized request.
    */
 
