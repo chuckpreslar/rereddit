@@ -79,7 +79,7 @@
   if(!Request.prototype.hasOwnProperty('after'))
     Request.prototype.after = function(id) {
       if(!this.method === 'GET') return this;
-      if(id.match(thing.regex)) return this;
+      if(!id.match(thing.regex)) return this;
       this.query({ after: id });
       return this;
     }
