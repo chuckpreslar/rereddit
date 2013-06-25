@@ -86,4 +86,4 @@ Limit, as may be expected, is used for limiting the amount of results returned v
 #### after(id)
 As with `limit`, `after` simply tells the request that all results returned from a `read` request should follow after the specified id.  *The  `id` is expected to be in proper id36 format.*
 
-### Release v0.1.0
+### Release v1.0.0
