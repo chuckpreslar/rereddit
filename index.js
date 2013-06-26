@@ -51,7 +51,8 @@
     , t4: 'message'
     , t5: 'subreddit'
   };
-
+  var user_agent = rereddit.user_agent = 'rereddit - A NodeJS wrapper for reddit.com.'; 
+  
   /**
    * Modifiy the Request constructor for further convenience
    * methods.
@@ -93,7 +94,7 @@
   Request.prototype.end = function(fn) {
     var self = this;
     this.set('accept', 'application/json');
-    this.set('user-agent', 'rereddit - A NodeJS wrapper for reddit.com.');
+    this.set('user-agent', rereddit.user_agent);
     this.query({ 'api_type': 'json' });
     this._end(function(err, res) {
       try {
