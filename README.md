@@ -1,4 +1,4 @@
-![broadcaster logo](http://i.imgur.com/kk7q0Ni.png)
+#rereddit
 
 ## About
 
