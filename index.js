@@ -54,6 +54,14 @@
       return this;
     }
 
+  if(!Request.prototype.hasOwnProperty('before'))
+    Request.prototype.before = function(id) {
+      if(!this.method === 'GET') return this;
+      if(!id.match(thing.regex)) return this;
+      this.query({ before: id });
+      return this;
+    }
+
   if(!Request.prototype.hasOwnProperty('after'))
     Request.prototype.after = function(id) {
       if(!this.method === 'GET') return this;
