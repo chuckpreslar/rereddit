@@ -54,6 +54,14 @@
       return this;
     }
 
+  if(!Request.prototype.hasOwnProperty('count'))
+    Request.prototype.count = function(num) {
+      if(!this.method === 'GET') return this;
+      if(!(num = parseInt(num))) return this;
+      this.query({ count: num });
+      return this;
+    }
+
   if(!Request.prototype.hasOwnProperty('before'))
     Request.prototype.before = function(id) {
       if(!this.method === 'GET') return this;
